@@ -32,10 +32,7 @@ public final class App {
             Optional<WeatherDataPoint> result = weather_data_points.min(
                 Comparator.comparing((x) -> x.getMaximumTemperature() - x.getMinimumTemperature()));
 
-            String dayWithSmallestTempSpread = "Not Found!";
-            if (result.isPresent()) {
-                dayWithSmallestTempSpread = "" + result.get().getDay();
-            }
+            String dayWithSmallestTempSpread = result.map(x -> Integer.toString(x.getDay())).orElse("Not Found!");
             System.out.printf("Day with smallest temperature spread : %s%n", dayWithSmallestTempSpread);
         }
         catch(Exception e) {
@@ -53,10 +50,7 @@ public final class App {
             Optional<FootballTeamStats> result = weather_data_points.min(
                 Comparator.comparing((x) -> x.getGoalsScored() - x.getGoalsAllowed()));
 
-            String teamWithSmallestGoalSpread = "Not Found!";
-            if (result.isPresent()) {
-                teamWithSmallestGoalSpread = result.get().getTeamName();
-            }
+            String teamWithSmallestGoalSpread = result.map(x -> x.getTeamName()).orElse("Not Found!");
             System.out.printf("Team with smallest goal spread       : %s%n", teamWithSmallestGoalSpread);
         }
         catch(Exception e) {
