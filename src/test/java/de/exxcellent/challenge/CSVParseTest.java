@@ -1,17 +1,17 @@
 package de.exxcellent.challenge;
 
-import org.junit.jupiter.api.Test;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
+
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+
 
 class CSVParseTest {
     private final Map<String, String> column_mapping = Map.of(
@@ -21,11 +21,11 @@ class CSVParseTest {
     );
 
     @Test
-    void readCSVFileTest() throws FileNotFoundException, CsvRequiredFieldEmptyException {
+    void readWeatherCSVFileTest() throws FileNotFoundException, CsvRequiredFieldEmptyException {
         String filepath = "./src/main/resources/de/exxcellent/challenge/weather.csv";
  
         FileReader reader = new FileReader(filepath);
-        Stream<WeatherDataPoint> weather_data_points = CSVConnector.createDataStream(reader, column_mapping);
+        Stream<WeatherDataPoint> weather_data_points = CSVConnector.createDataStream(reader, WeatherDataPoint.class, column_mapping);
     
         WeatherDataPoint first_entry = weather_data_points.iterator().next();
         assertEquals(1, first_entry.getDay());
@@ -41,7 +41,7 @@ class CSVParseTest {
 
         assertThrows(
             RuntimeException.class, 
-            () -> CSVConnector.createDataStream(reader, column_mapping)
+            () -> CSVConnector.createDataStream(reader, WeatherDataPoint.class, column_mapping)
         );
     }
 }

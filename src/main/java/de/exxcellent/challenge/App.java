@@ -28,7 +28,7 @@ public final class App {
         String filepath = "./src/main/resources/de/exxcellent/challenge/weather.csv";
         try {
             FileReader reader = new FileReader(filepath);
-            Stream<WeatherDataPoint> weather_data_points = CSVConnector.createDataStream(reader, column_mapping);
+            Stream<WeatherDataPoint> weather_data_points = CSVConnector.createDataStream(reader, WeatherDataPoint.class, column_mapping);
             Optional<WeatherDataPoint> result = weather_data_points.min(
                 Comparator.comparing((x) -> x.getMaximumTemperature() - x.getMinimumTemperature()));
 

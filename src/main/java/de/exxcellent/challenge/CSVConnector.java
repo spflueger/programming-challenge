@@ -11,19 +11,20 @@ import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 class CSVConnector {  
-    public static Stream<WeatherDataPoint> createDataStream(
+    public static <T> Stream<T> createDataStream(
         Reader data_reader,
+        Class<T> object_class,
         Map<String, String> column_mapping
     ) throws CsvRequiredFieldEmptyException {
         // Note there is currently no error thrown when the column mapping is not matching the csv file header.
         // Instead the fields are simply assigned the default value.
-        HeaderColumnNameTranslateMappingStrategy<WeatherDataPoint> ms = new HeaderColumnNameTranslateMappingStrategy<>();
-        ms.setType(WeatherDataPoint.class);
+        HeaderColumnNameTranslateMappingStrategy<T> ms = new HeaderColumnNameTranslateMappingStrategy<>();
+        ms.setType(object_class);
         ms.setColumnMapping(column_mapping);
 
-        List<WeatherDataPoint> weather_data_points = new CsvToBeanBuilder<WeatherDataPoint>(
+        List<T> data_rows = new CsvToBeanBuilder<T>(
             data_reader
-        ).withType(WeatherDataPoint.class).withMappingStrategy(ms).build().parse();
-        return weather_data_points.stream();
+        ).withType(object_class).withMappingStrategy(ms).build().parse();
+        return data_rows.stream();
     }
 }
