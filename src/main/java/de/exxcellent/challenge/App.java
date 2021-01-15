@@ -14,20 +14,20 @@ import java.util.stream.Stream;
  */
 public final class App {
 
+
+
     /**
      * This is the main entry method of your program.
      * @param args The CLI arguments passed
      */
     public static void main(String... args) {
-
-        Map<String, String> column_mapping = Map.of(
-            "Day", "day",  
-            "MxT", "maximum_temperature", 
-            "MnT", "minimum_temperature"
-        );
-        String filepath = "./src/main/resources/de/exxcellent/challenge/weather.csv";
         try {
-            FileReader reader = new FileReader(filepath);
+            Map<String, String> column_mapping = Map.of(
+                "Day", "day",  
+                "MxT", "maximum_temperature", 
+                "MnT", "minimum_temperature"
+            );
+            FileReader reader = new FileReader("./src/main/resources/de/exxcellent/challenge/weather.csv");
             Stream<WeatherDataPoint> weather_data_points = CSVConnector.createDataStream(reader, WeatherDataPoint.class, column_mapping);
             Optional<WeatherDataPoint> result = weather_data_points.min(
                 Comparator.comparing((x) -> x.getMaximumTemperature() - x.getMinimumTemperature()));
@@ -42,7 +42,25 @@ public final class App {
             System.out.println(e.getMessage());
         }
 
-        String teamWithSmallestGoalSpread = "A good team"; // Your goal analysis function call …
-        System.out.printf("Team with smallest goal spread       : %s%n", teamWithSmallestGoalSpread);
+        try {
+            Map<String, String> column_mapping = Map.of(
+                "Team", "team_name",  
+                "Goals", "goals_scored", 
+                "Goals Allowed", "goals_allowed"
+            );
+            FileReader reader = new FileReader("./src/main/resources/de/exxcellent/challenge/football.csv");
+            Stream<FootballTeamStats> weather_data_points = CSVConnector.createDataStream(reader, FootballTeamStats.class, column_mapping);
+            Optional<FootballTeamStats> result = weather_data_points.min(
+                Comparator.comparing((x) -> x.getGoalsScored() - x.getGoalsAllowed()));
+
+            String teamWithSmallestGoalSpread = "Not Found!";
+            if (result.isPresent()) {
+                teamWithSmallestGoalSpread = result.get().getTeamName();
+            }
+            System.out.printf("Team with smallest goal spread       : %s%n", teamWithSmallestGoalSpread);
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
