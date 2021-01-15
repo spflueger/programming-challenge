@@ -34,6 +34,23 @@ class CSVParseTest {
     }
 
     @Test
+    void readFootballCSVFileTest() throws FileNotFoundException, CsvRequiredFieldEmptyException {
+        FileReader reader = new FileReader("./src/main/resources/de/exxcellent/challenge/football.csv");
+
+        Map<String, String> column_mapping = Map.of(
+            "Team", "team_name",  
+            "Goals", "goals_scored", 
+            "Goals Allowed", "goals_allowed"
+        );
+        Stream<FootballTeamStats> football_team_stats = CSVConnector.createDataStream(
+            reader, FootballTeamStats.class, column_mapping);
+        FootballTeamStats first_entry = football_team_stats.iterator().next();
+        assertEquals("Arsenal", first_entry.getTeamName());
+        assertEquals(79, first_entry.getGoalsScored());
+        assertEquals(36, first_entry.getGoalsAllowed());
+    }
+
+    @Test
     void formatTest() {
         String csv_string = "MxT,MnT;\n1,32,10";
 
