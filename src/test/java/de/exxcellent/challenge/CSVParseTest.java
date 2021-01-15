@@ -55,10 +55,8 @@ class CSVParseTest {
         String csv_string = "MxT,MnT;\n1,32,10";
 
         StringReader reader = new StringReader(csv_string);
-
-        assertThrows(
-            RuntimeException.class, 
-            () -> CSVConnector.createDataStream(reader, WeatherDataPoint.class, column_mapping)
-        );
+        
+        Stream<WeatherDataPoint> wdps = CSVConnector.createDataStream(reader, WeatherDataPoint.class, column_mapping);
+        assertThrows(RuntimeException.class, () -> wdps.iterator().next());
     }
 }
