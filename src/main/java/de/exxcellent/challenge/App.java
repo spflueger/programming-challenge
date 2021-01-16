@@ -28,8 +28,7 @@ public final class App {
             );
             FileReader reader = new FileReader("./src/main/resources/de/exxcellent/challenge/weather.csv");
             Stream<WeatherDataPoint> weather_data_points = CSVConnector.createDataStream(reader, WeatherDataPoint.class, column_mapping);
-            Optional<WeatherDataPoint> result = weather_data_points.min(
-                Comparator.comparing((x) -> x.getMaximumTemperature() - x.getMinimumTemperature()));
+            Optional<WeatherDataPoint> result = weather_data_points.min(DataProcessing.Comparators.MinMaxTemperaturDifference);
 
             String dayWithSmallestTempSpread = result.map(x -> Integer.toString(x.getDay())).orElse("Not Found!");
             System.out.printf("Day with smallest temperature spread : %s%n", dayWithSmallestTempSpread);
@@ -46,9 +45,7 @@ public final class App {
             );
             FileReader reader = new FileReader("./src/main/resources/de/exxcellent/challenge/football.csv");
             Stream<FootballTeamStats> weather_data_points = CSVConnector.createDataStream(reader, FootballTeamStats.class, column_mapping);
-            Optional<FootballTeamStats> result = weather_data_points.min(
-                Comparator.comparing(x -> Math.abs(x.getGoalsScored() - x.getGoalsAllowed()))
-            );
+            Optional<FootballTeamStats> result = weather_data_points.min(DataProcessing.Comparators.AbsGoalsDifference);
 
             String teamWithSmallestGoalSpread = result.map(x -> x.getTeamName()).orElse("Not Found!");
             System.out.printf("Team with smallest goal spread       : %s%n", teamWithSmallestGoalSpread);
