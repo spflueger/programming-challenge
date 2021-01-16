@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 /**
  * The entry class for your solution. This class is only aimed as starting point and not intended as baseline for your software
  * design. Read: create your own classes and packages as appropriate.
@@ -48,7 +47,8 @@ public final class App {
             FileReader reader = new FileReader("./src/main/resources/de/exxcellent/challenge/football.csv");
             Stream<FootballTeamStats> weather_data_points = CSVConnector.createDataStream(reader, FootballTeamStats.class, column_mapping);
             Optional<FootballTeamStats> result = weather_data_points.min(
-                Comparator.comparing((x) -> x.getGoalsScored() - x.getGoalsAllowed()));
+                Comparator.comparing(x -> Math.abs(x.getGoalsScored() - x.getGoalsAllowed()))
+            );
 
             String teamWithSmallestGoalSpread = result.map(x -> x.getTeamName()).orElse("Not Found!");
             System.out.printf("Team with smallest goal spread       : %s%n", teamWithSmallestGoalSpread);
